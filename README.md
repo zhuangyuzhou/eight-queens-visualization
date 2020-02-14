@@ -13,3 +13,4 @@ $ python3 n_queens.py
 
 ## Demo
 
+![](./img/eight-queens-demo.gif)
