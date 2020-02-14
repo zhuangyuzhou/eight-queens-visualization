@@ -87,7 +87,6 @@ if __name__ == '__main__':
     draw_board()
     
     t = threading.Thread(target=run_n_queens)
-    t.setDaemon(True)
     t.start()
     
     # Run until the user asks to quit
