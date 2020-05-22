@@ -1,5 +1,5 @@
 import threading
-import time
+import time, sys
 
 import pygame
 pygame.init()
@@ -10,9 +10,9 @@ GRID_SIZE = 50
 TEXT_HEIGHT = 30
 LIGHT_COLOR = (255, 206, 158)
 DARK_COLOR = (209, 139, 71)
-queen_img = pygame.image.load('./img/queen.png')
+queen_img = pygame.image.load('./images/queen.png')
 queen_img = pygame.transform.scale(queen_img, (GRID_SIZE, GRID_SIZE))
-golden_queen_img = pygame.image.load('./img/queen2.png')
+golden_queen_img = pygame.image.load('./images/queen2.png')
 golden_queen_img = pygame.transform.scale(golden_queen_img, (GRID_SIZE, GRID_SIZE))
 # Set up the drawing window
 screen = pygame.display.set_mode([GRID_SIZE * N, GRID_SIZE * N + TEXT_HEIGHT])
@@ -71,23 +71,26 @@ def run_n_queens():
                     anti_diag_set.discard(anti_diag)
                 else: # Come to a solution
                     n_solutions += 1
-                    pygame.draw.rect(screen, (255, 255, 255), (0, GRID_SIZE * N, GRID_SIZE * N, TEXT_HEIGHT))
-                    text = font.render('Number of solutions: {}'.format(n_solutions), True, (0, 0, 0))
-                    screen.blit(text, (0, GRID_SIZE * N))
-                    pygame.display.flip()
-                    flip_solution(queen_set, golden_queen_img)
-                    time.sleep(1)
-                    flip_solution(queen_set, queen_img)
+                    try:
+                        pygame.draw.rect(screen, (255, 255, 255), (0, GRID_SIZE * N, GRID_SIZE * N, TEXT_HEIGHT))
+                        text = font.render('Number of solutions: {}'.format(n_solutions), True, (0, 0, 0))
+                        screen.blit(text, (0, GRID_SIZE * N))
+                        pygame.display.flip()
+                        flip_solution(queen_set, golden_queen_img)
+                        time.sleep(1)
+                        flip_solution(queen_set, queen_img)
+                    except pygame.error:
+                        sys.exit(0)
                 queen_set.discard((col, row))
                 remove_queen(col, row)
                 
     dfs(0)
 
 if __name__ == '__main__':
+    
     draw_board()
     
-    t = threading.Thread(target=run_n_queens)
-    t.start()
+    threading.Thread(target=run_n_queens, daemon=True).start()
     
     # Run until the user asks to quit
     while True:
